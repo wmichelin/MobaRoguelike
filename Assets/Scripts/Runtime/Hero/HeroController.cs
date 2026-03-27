@@ -28,6 +28,11 @@ namespace MobaRoguelike.Runtime.Hero
             _agent.updateRotation = false;
         }
 
+        private void Start()
+        {
+            _agent.Warp(transform.position);
+        }
+
         private void OnEnable()
         {
             if (_inputReader != null)
@@ -54,14 +59,10 @@ namespace MobaRoguelike.Runtime.Hero
                     Vector3 worldDir = s_IsometricRotation * new Vector3(_moveInput.x, 0f, _moveInput.y);
                     Vector3 move = worldDir.normalized * (_moveSpeed * Time.deltaTime);
                     _agent.Move(move);
-                    transform.position = _agent.nextPosition;
-
                     transform.rotation = Quaternion.LookRotation(worldDir.normalized);
                 }
-                else
-                {
-                    _agent.velocity = Vector3.zero;
-                }
+
+                transform.position = _agent.nextPosition;
 
                 float speed = _moveInput.sqrMagnitude > 0.01f ? _moveSpeed : 0f;
                 if (_animator != null)

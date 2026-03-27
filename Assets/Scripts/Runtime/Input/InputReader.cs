@@ -14,10 +14,9 @@ namespace MobaRoguelike.Runtime.Input
 
         private InputSystem_Actions _actions;
 
-        private void Awake()
+        private void OnEnable()
         {
             _actions = new InputSystem_Actions();
-            _actions.Player.Enable();
 
             _actions.Player.Move.performed += ctx => OnMoveInput?.Invoke(ctx.ReadValue<Vector2>());
             _actions.Player.Move.canceled += _ => OnMoveInput?.Invoke(Vector2.zero);
@@ -28,12 +27,15 @@ namespace MobaRoguelike.Runtime.Input
             _actions.Player.AbilityW.performed += _ => OnAbilityInput?.Invoke(AbilitySlot.W);
             _actions.Player.AbilityE.performed += _ => OnAbilityInput?.Invoke(AbilitySlot.E);
             _actions.Player.AbilityR.performed += _ => OnAbilityInput?.Invoke(AbilitySlot.R);
+
+            _actions.Player.Enable();
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
             _actions.Player.Disable();
             _actions.Dispose();
+            _actions = null;
         }
     }
 }
