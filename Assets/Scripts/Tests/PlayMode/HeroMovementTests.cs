@@ -15,7 +15,7 @@ namespace MobaRoguelike.Tests.PlayMode
             SceneManager.LoadScene("Game");
             yield return null; // wait one frame for scene to load
 
-            var hero = Object.FindFirstObjectByType<HeroController>();
+            var hero = Object.FindAnyObjectByType<HeroController>();
             Assert.IsNotNull(hero, "HeroController not found in scene.");
         }
 
@@ -25,13 +25,13 @@ namespace MobaRoguelike.Tests.PlayMode
             SceneManager.LoadScene("Game");
             yield return null;
 
-            var hero = Object.FindFirstObjectByType<HeroController>();
+            var hero = Object.FindAnyObjectByType<HeroController>();
             Assert.IsNotNull(hero);
 
             float startX = hero.transform.position.x;
 
             // Simulate 60 frames of rightward input by invoking the method directly
-            var inputReader = Object.FindFirstObjectByType<MobaRoguelike.Runtime.Input.InputReader>();
+            var inputReader = Object.FindAnyObjectByType<MobaRoguelike.Runtime.Input.InputReader>();
 
             // Drive movement manually via the event for 60 frames
             for (int i = 0; i < 60; i++)
@@ -50,7 +50,7 @@ namespace MobaRoguelike.Tests.PlayMode
             SceneManager.LoadScene("Game");
             yield return null;
 
-            var hero = Object.FindFirstObjectByType<HeroController>();
+            var hero = Object.FindAnyObjectByType<HeroController>();
             Assert.IsNotNull(hero);
 
             // Move for a bit
@@ -60,16 +60,19 @@ namespace MobaRoguelike.Tests.PlayMode
                 yield return null;
             }
 
-            // Stop input
-            for (int i = 0; i < 30; i++)
-            {
-                hero.SendMessage("HandleMoveInput", Vector2.zero, SendMessageOptions.DontRequireReceiver);
-                yield return null;
-            }
+            // Stop input and record position
+            hero.SendMessage("HandleMoveInput", Vector2.zero, SendMessageOptions.DontRequireReceiver);
+            yield return null;
 
-            var agent = hero.GetComponent<UnityEngine.AI.NavMeshAgent>();
-            Assert.Less(agent.velocity.magnitude, 0.05f,
-                "Hero velocity should be near zero after input released.");
+            Vector3 posAfterStop = hero.transform.position;
+
+            // Wait a few more frames
+            for (int i = 0; i < 10; i++)
+                yield return null;
+
+            float drift = (hero.transform.position - posAfterStop).magnitude;
+            Assert.Less(drift, 0.05f,
+                "Hero should stop moving after input released.");
         }
     }
 }
