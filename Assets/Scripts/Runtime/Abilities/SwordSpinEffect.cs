@@ -12,7 +12,7 @@ namespace MobaRoguelike.Runtime.Abilities
     [Serializable]
     public class SwordSpinEffect : IAbilityEffect
     {
-        public float Radius = 2f;
+        public float Radius = 4f;
         public float Damage = 50f;
 
         public void Apply(AbilityContext context)

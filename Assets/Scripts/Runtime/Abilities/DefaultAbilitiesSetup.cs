@@ -21,7 +21,7 @@ namespace MobaRoguelike.Runtime.Abilities
                 Id          = "sword_spin",
                 DisplayName = "Sword Spin",
                 Cooldown    = 1f,
-                Effect      = new SwordSpinEffect { Radius = 2f, Damage = 50f }
+                Effect      = new SwordSpinEffect { Radius = 4f, Damage = 50f }
             });
 
             bridge.Caster.SetAbility(AbilitySlot.W, new AbilityData

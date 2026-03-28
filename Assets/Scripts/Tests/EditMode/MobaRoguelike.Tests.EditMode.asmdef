@@ -3,6 +3,7 @@
     "rootNamespace": "MobaRoguelike.Tests.EditMode",
     "references": [
         "MobaRoguelike.Core",
+        "MobaRoguelike.Runtime",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],

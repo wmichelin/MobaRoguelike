@@ -30,15 +30,10 @@ namespace MobaRoguelike.Tests.PlayMode
 
             float startX = hero.transform.position.x;
 
-            // Simulate 60 frames of rightward input by invoking the method directly
-            var inputReader = Object.FindAnyObjectByType<MobaRoguelike.Runtime.Input.InputReader>();
-
-            // Drive movement manually via the event for 60 frames
-            for (int i = 0; i < 60; i++)
-            {
-                hero.SendMessage("HandleMoveInput", new Vector2(1f, 0f), SendMessageOptions.DontRequireReceiver);
-                yield return null;
-            }
+            // Set rightward input once; HeroController.Update reads _moveInput each frame.
+            // Use WaitForSeconds so this is framerate-independent (batchmode runs at very high FPS).
+            hero.SendMessage("HandleMoveInput", new Vector2(1f, 0f), SendMessageOptions.DontRequireReceiver);
+            yield return new WaitForSeconds(0.1f);
 
             Assert.GreaterOrEqual(hero.transform.position.x - startX, 0.5f,
                 "Hero did not move far enough in the X direction.");

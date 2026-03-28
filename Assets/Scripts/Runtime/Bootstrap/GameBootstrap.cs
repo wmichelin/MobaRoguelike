@@ -14,14 +14,21 @@ namespace MobaRoguelike.Runtime.Bootstrap
         public static HeroData HeroData { get; private set; }
         public static StatSheet HeroStats { get; private set; }
 
+        private static GameBootstrap _instance;
+
         private void Awake()
         {
-            if (StateMachine != null)
+            if (_instance != null)
             {
-                Destroy(gameObject);
+                // Scene reloaded (e.g. in tests). Reset the state machine for the new session
+                // but keep the persistent bootstrap alive. Destroy only this component so
+                // other components on this GameObject (e.g. GameManager) can still Start().
+                StateMachine = new GameStateMachine();
+                Destroy(this);
                 return;
             }
 
+            _instance = this;
             DontDestroyOnLoad(gameObject);
 
             Application.targetFrameRate = 60;
@@ -33,6 +40,15 @@ namespace MobaRoguelike.Runtime.Bootstrap
 
             HeroData = new HeroData(HeroStats);
             StateMachine = new GameStateMachine();
+        }
+
+        private void OnDestroy()
+        {
+            if (_instance == this)
+            {
+                _instance = null;
+                StateMachine = null;
+            }
         }
     }
 }

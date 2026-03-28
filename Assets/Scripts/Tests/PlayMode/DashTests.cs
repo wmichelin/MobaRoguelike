@@ -19,12 +19,10 @@ namespace MobaRoguelike.Tests.PlayMode
             var hero = Object.FindAnyObjectByType<HeroController>();
             Assert.IsNotNull(hero, "HeroController not found in scene.");
 
-            // Move right for a few frames to establish facing direction
-            for (int i = 0; i < 10; i++)
-            {
-                hero.SendMessage("HandleMoveInput", new Vector2(1f, 0f), SendMessageOptions.DontRequireReceiver);
-                yield return null;
-            }
+            // Move right briefly to establish facing direction.
+            // Use WaitForSeconds so the test is framerate-independent (batchmode runs at very high FPS).
+            hero.SendMessage("HandleMoveInput", new Vector2(1f, 0f), SendMessageOptions.DontRequireReceiver);
+            yield return new WaitForSeconds(0.05f);
 
             // Stop movement and record position
             hero.SendMessage("HandleMoveInput", Vector2.zero, SendMessageOptions.DontRequireReceiver);
@@ -35,9 +33,8 @@ namespace MobaRoguelike.Tests.PlayMode
             // Trigger dash
             hero.SendMessage("HandleDashInput", SendMessageOptions.DontRequireReceiver);
 
-            // Wait for dash to complete (~0.15s at 60fps = ~9 frames, give extra)
-            for (int i = 0; i < 20; i++)
-                yield return null;
+            // Wait longer than DashDuration (0.15s) to ensure the dash fully completes
+            yield return new WaitForSeconds(0.5f);
 
             float distanceMoved = (hero.transform.position - posBeforeDash).magnitude;
             Assert.Greater(distanceMoved, 2f, "Hero should move a significant distance during dash.");
@@ -100,15 +97,14 @@ namespace MobaRoguelike.Tests.PlayMode
             // Trigger dash
             hero.SendMessage("HandleDashInput", SendMessageOptions.DontRequireReceiver);
 
-            // Wait for dash to finish and cooldown to start
-            for (int i = 0; i < 20; i++)
-                yield return null;
+            // Wait longer than DashDuration (0.15s) for the dash to finish and cooldown to start.
+            // Use WaitForSeconds so the test is framerate-independent (batchmode runs at very high FPS).
+            yield return new WaitForSeconds(0.3f);
 
             Assert.IsTrue(canvas.gameObject.activeSelf, "Cooldown bar should be visible during cooldown.");
 
-            // Wait for cooldown to expire (~1 second = ~60 frames at 60fps, add buffer)
-            for (int i = 0; i < 75; i++)
-                yield return null;
+            // Wait for cooldown to expire (DashCooldown = 1.0s, add buffer)
+            yield return new WaitForSeconds(1.5f);
 
             Assert.IsFalse(canvas.gameObject.activeSelf, "Cooldown bar should hide after cooldown expires.");
         }
