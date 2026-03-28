@@ -71,7 +71,8 @@ namespace MobaRoguelike.Runtime.HUD
                 AbilityData data = _casterBridge.Caster.GetAbility(slot);
                 float maxCooldown = data != null ? data.Cooldown : 1f;
                 float fill = state.IsOnCooldown ? state.RemainingCooldown / maxCooldown : 0f;
-                _abilitySlotViews[i].UpdateCooldown(fill);
+                float remaining = state.IsOnCooldown ? state.RemainingCooldown : 0f;
+                _abilitySlotViews[i].UpdateCooldown(fill, remaining);
             }
         }
     }

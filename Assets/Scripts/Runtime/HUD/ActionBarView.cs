@@ -142,7 +142,22 @@ namespace MobaRoguelike.Runtime.HUD
             nameText.alignment  = TextAnchor.LowerCenter;
             nameText.font       = _font;
 
-            slotView.Initialize(bgImage, overlayImage, keyText, nameText);
+            // Cooldown timer — large, centered, only visible during cooldown
+            var cdGo  = new GameObject("CooldownTimer");
+            cdGo.transform.SetParent(slotGo.transform, false);
+            var cdRect  = cdGo.AddComponent<RectTransform>();
+            cdRect.anchorMin = Vector2.zero;
+            cdRect.anchorMax = Vector2.one;
+            cdRect.sizeDelta = Vector2.zero;
+            var cdText        = cdGo.AddComponent<Text>();
+            cdText.fontSize   = 22;
+            cdText.fontStyle  = FontStyle.Bold;
+            cdText.color      = Color.white;
+            cdText.alignment  = TextAnchor.MiddleCenter;
+            cdText.font       = _font;
+            cdText.text       = string.Empty;
+
+            slotView.Initialize(bgImage, overlayImage, keyText, nameText, cdText);
             return slotView;
         }
 
