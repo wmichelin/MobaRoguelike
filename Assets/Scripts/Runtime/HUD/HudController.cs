@@ -12,6 +12,15 @@ namespace MobaRoguelike.Runtime.HUD
         [SerializeField] private AbilitySlotView[] _abilitySlotViews = new AbilitySlotView[4];
         [SerializeField] private AbilityCasterBridge _casterBridge;
 
+        private void Awake()
+        {
+            if (_casterBridge == null)
+                _casterBridge = FindObjectOfType<AbilityCasterBridge>();
+
+            if (GetComponent<ActionBarView>() == null)
+                gameObject.AddComponent<ActionBarView>();
+        }
+
         private void Start()
         {
             if (GameBootstrap.HeroStats != null)
@@ -47,6 +56,11 @@ namespace MobaRoguelike.Runtime.HUD
             float current = GameBootstrap.HeroStats.GetFinalValue(StatType.CurrentHealth);
             float max = GameBootstrap.HeroStats.GetFinalValue(StatType.MaxHealth);
             _healthBar.UpdateHealth(current, max);
+        }
+
+        public void SetSlotViews(AbilitySlotView[] views)
+        {
+            _abilitySlotViews = views;
         }
 
         private void OnCooldownChanged(AbilitySlot slot, AbilityState state)

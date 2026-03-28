@@ -15,6 +15,9 @@ namespace MobaRoguelike.Runtime.Abilities
 
         private void Awake()
         {
+            if (_inputReader == null)
+                _inputReader = FindObjectOfType<InputReader>();
+
             _caster = new AbilityCaster();
 
             for (int i = 0; i < 4 && i < _abilityDefinitions.Length; i++)
@@ -22,6 +25,9 @@ namespace MobaRoguelike.Runtime.Abilities
                 if (_abilityDefinitions[i] != null)
                     _caster.SetAbility((AbilitySlot)i, _abilityDefinitions[i].ToAbilityData());
             }
+
+            if (GetComponent<DefaultAbilitiesSetup>() == null)
+                gameObject.AddComponent<DefaultAbilitiesSetup>();
         }
 
         private void OnEnable()
@@ -47,7 +53,9 @@ namespace MobaRoguelike.Runtime.Abilities
             {
                 CasterPositionX = transform.position.x,
                 CasterPositionZ = transform.position.z,
-                CasterId = gameObject.GetInstanceID()
+                CasterForwardX  = transform.forward.x,
+                CasterForwardZ  = transform.forward.z,
+                CasterId        = gameObject.GetInstanceID()
             };
             _caster.TryCast(slot, ctx);
         }

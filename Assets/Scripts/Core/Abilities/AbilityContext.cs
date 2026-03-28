@@ -7,5 +7,7 @@ namespace MobaRoguelike.Core.Abilities
         public float TargetPositionX;
         public float TargetPositionZ;
         public int CasterId;
+        public float CasterForwardX;
+        public float CasterForwardZ;
     }
 }
