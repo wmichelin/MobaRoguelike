@@ -11,6 +11,7 @@ namespace MobaRoguelike.Runtime.Input
         public event Action<Vector2> OnMoveInput;
         public event Action<AbilitySlot> OnAbilityInput;
         public event Action OnAttackInput;
+        public event Action OnDashInput;
 
         private InputSystem_Actions _actions;
 
@@ -22,6 +23,7 @@ namespace MobaRoguelike.Runtime.Input
             _actions.Player.Move.canceled += _ => OnMoveInput?.Invoke(Vector2.zero);
 
             _actions.Player.Attack.performed += _ => OnAttackInput?.Invoke();
+            _actions.Player.Jump.performed += _ => OnDashInput?.Invoke();
 
             _actions.Player.AbilityQ.performed += _ => OnAbilityInput?.Invoke(AbilitySlot.Q);
             _actions.Player.AbilityW.performed += _ => OnAbilityInput?.Invoke(AbilitySlot.W);
