@@ -106,8 +106,8 @@ namespace MobaRoguelike.Tests.PlayMode
 
             Assert.IsTrue(canvas.gameObject.activeSelf, "Cooldown bar should be visible during cooldown.");
 
-            // Wait for cooldown to expire (~2 seconds = ~120 frames at 60fps, add buffer)
-            for (int i = 0; i < 140; i++)
+            // Wait for cooldown to expire (~1 second = ~60 frames at 60fps, add buffer)
+            for (int i = 0; i < 75; i++)
                 yield return null;
 
             Assert.IsFalse(canvas.gameObject.activeSelf, "Cooldown bar should hide after cooldown expires.");

@@ -19,7 +19,7 @@ namespace MobaRoguelike.Runtime.Hero
 
         private const float DashDistance = 4f;
         private const float DashDuration = 0.15f;
-        private const float DashCooldown = 2f;
+        private const float DashCooldown = 1f;
 
         private bool _isDashing;
         private float _dashElapsed;
